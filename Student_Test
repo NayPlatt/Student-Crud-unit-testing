@@ -1,0 +1,65 @@
+
+import unittest
+from student_crud import StudentRegistrationSystem, Student
+ 
+class TestingStudentRegistrationSystem(unittest.TestCase):
+    def setUp(self):
+         self.system = StudentRegistrationSystem()
+         
+    def test_create_student_success(self):
+        result = self.system.create_student(1, "John Doe", 20, "COmputer Science")
+        self.assertTrue(result) #checks if student was created 
+
+    def test_create_Student_duplicate(self):
+        self.system.create_student(1,"John Doe", 20, "Computer Science")
+        result = self.system.create_student(1, "Jane Doe", 21, "Biology")
+        self.assertFalse(result) #checks that duplicate fails 
+
+    def test_read_student_success(self): 
+        self.system.create_student(1, "John Doe", 20, "Computer Science")
+        result = self.system.read_student(1) 
+        self.assertEqual(result, 1)
+        
+    def test_read_student_not_found(self):
+        result = self.system.read_student(999)
+        self.assertIsNone(result) # no student should be found 
+
+    def test_read_all_students(self): 
+        self.system.create_student(1, "John Doe", 20, "COmputer Science")
+        self.system.create_student(2, "Jane Smith", 22, "Biology")
+        all_students = self.system.read.all_students()
+        self.assertEqual(len(all_students), 2) # should have 2 students 
+
+    def test_read_all_students_empty(self): 
+        all_students = self.systems.read_all_atudents()
+        self.assertEqual(all_students, [])
+
+    def test_update_student_success(self):
+        self.system.create_student(1, "John Doe", 20, "Computer Science")
+        result = self.system.update_student(1, name="Johnathan Doe", age=21)
+        self.assertTrue(result)  # The update should be successful
+
+    # UPDATE: Test updating a non-existent student
+    def test_update_student_not_found(self):
+        result = self.system.update_student(999, name="Non Existent", age=30)
+        self.assertFalse(result)  # The update should fail
+
+    # UPDATE: Test updating with no new values
+    def test_update_student_no_changes(self):
+        self.system.create_student(1, "John Doe", 20, "Computer Science")
+        result = self.system.update_student(1)  # No changes provided
+        self.assertTrue(result)  # Should succeed, but no changes happen
+
+    # DELETE: Test deleting an existing student
+    def test_delete_student_success(self):
+        self.system.create_student(1, "John Doe", 20, "Computer Science")
+        result = self.system.delete_student(1)
+        self.assertTrue(result)  # The student should be deleted successfully
+
+    # DELETE: Test deleting a non-existent student
+    def test_delete_student_not_found(self):
+        result = self.system.delete_student(999)  # Non-existent student ID
+        self.assertFalse(result)  # The deletion should fail
+
+if __name__ == "__main__":
+    unittest.main()
